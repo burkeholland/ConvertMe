@@ -1,0 +1,23 @@
+﻿<Application x:Class="ImageConverter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:converters="clr-namespace:ImageConverter.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Use system theme (Light/Dark) automatically -->
+                <ui:ThemesDictionary Theme="Unknown" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Value Converters -->
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:FileNameConverter x:Key="FileName" />
+            <converters:QualityFormatConverter x:Key="QualityFormat" />
+            <converters:SizeKbFormatConverter x:Key="SizeKbFormat" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibility" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,40 @@
+# Build outputs
+bin/
+obj/
+publish/
+release/
+
+# Large compiled executables - built by CI
+Installer/ImageConverter.exe
+
+# IDE files
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+
+# Test results
+TestResults/
+*.trx
+
+# Windows files
+Thumbs.db
+Desktop.ini
+
+# macOS files
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+~$*
