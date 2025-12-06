@@ -28,7 +28,6 @@ public partial class MainViewModel : ObservableObject
                 .Select(f => new FormatOption(f))
         );
         SelectedFormat = AvailableFormats.First(f => f.Format == ImageFormat.Png);
-        ConversionHistory = [];
     }
 
     // Image source properties
@@ -100,9 +99,6 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private ConversionResult? _lastResult;
-
-    [ObservableProperty]
-    private ObservableCollection<ConversionResult> _conversionHistory;
 
     // Shell integration
     [ObservableProperty]
@@ -220,7 +216,6 @@ public partial class MainViewModel : ObservableObject
             var result = await _conversionService.ConvertAsync(SourceFilePath, options);
 
             LastResult = result;
-            ConversionHistory.Insert(0, result);
 
             if (result.Success)
             {

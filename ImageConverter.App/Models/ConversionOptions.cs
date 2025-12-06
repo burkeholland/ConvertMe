@@ -38,11 +38,6 @@ public record ConversionOptions
     public bool MaintainAspectRatio { get; init; } = true;
     
     /// <summary>
-    /// Preserve metadata (EXIF, etc.) during conversion.
-    /// </summary>
-    public bool PreserveMetadata { get; init; } = false;
-    
-    /// <summary>
     /// Output path for the converted image. If null, uses same directory with new extension.
     /// </summary>
     public string? OutputPath { get; init; }

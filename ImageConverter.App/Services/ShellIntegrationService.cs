@@ -10,15 +10,16 @@ namespace ImageConverter.Services;
 /// </summary>
 public class ShellIntegrationService
 {
+    // Constants for registry configuration
     private const string MenuName = "Convert Image";
     private const string RegistryKeyName = "ImageConverter";
+    private const int SeparatorFlag = 0x20;  // CommandFlags value for separator before menu item
     
     private static readonly string[] ImageExtensions =
     [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".ico"
     ];
 
-    // Format options for the submenu
     private static readonly (string Name, string Arg)[] FormatOptions =
     [
         ("JPEG", "jpeg"),
@@ -69,10 +70,10 @@ public class ShellIntegrationService
 
         foreach (var ext in ImageExtensions)
         {
-            RegisterForExtension(ext, executablePath);
+            RegisterCascadingMenu($"SystemFileAssociations\\{ext}\\shell\\{RegistryKeyName}", executablePath);
         }
 
-        RegisterForSystemFileAssociation("image", executablePath);
+        RegisterCascadingMenu($"SystemFileAssociations\\image\\shell\\{RegistryKeyName}", executablePath);
     }
 
     /// <summary>
@@ -88,45 +89,41 @@ public class ShellIntegrationService
 
         foreach (var ext in ImageExtensions)
         {
-            UnregisterForExtension(ext);
+            DeleteRegistryKey($"SystemFileAssociations\\{ext}\\shell\\{RegistryKeyName}");
         }
 
-        UnregisterForSystemFileAssociation("image");
+        DeleteRegistryKey($"SystemFileAssociations\\image\\shell\\{RegistryKeyName}");
     }
 
     /// <summary>
-    /// Register cascading context menu for a specific file extension.
+    /// Register cascading context menu at the specified registry path.
     /// </summary>
-    private static void RegisterForExtension(string extension, string executablePath)
+    private static void RegisterCascadingMenu(string keyPath, string executablePath)
     {
-        var keyPath = $"SystemFileAssociations\\{extension}\\shell\\{RegistryKeyName}";
-
         try
         {
-            // First, completely remove any existing key to ensure clean slate
+            // Clean slate - remove existing key first
             Registry.ClassesRoot.DeleteSubKeyTree(keyPath, false);
 
             using var shellKey = Registry.ClassesRoot.CreateSubKey(keyPath);
             if (shellKey == null) return;
 
-            // MUIVerb is the display name for cascading menus
+            // Configure cascading menu properties
             shellKey.SetValue("MUIVerb", MenuName);
             shellKey.SetValue("Icon", $"\"{executablePath}\",0");
-            // SubCommands="" tells Windows to look for shell subkey for submenu items
-            shellKey.SetValue("SubCommands", "");
+            shellKey.SetValue("SubCommands", "");  // Enables submenu
 
             using var subShellKey = shellKey.CreateSubKey("shell");
             if (subShellKey == null) return;
 
+            // Add format options to submenu
             int order = 0;
             foreach (var (name, arg) in FormatOptions)
             {
-                // Use simple names without special characters
                 using var formatKey = subShellKey.CreateSubKey(arg);
                 if (formatKey == null) continue;
 
                 formatKey.SetValue("MUIVerb", $"Convert to {name}");
-                // CommandFlags for ordering (optional, but helps ensure order)
                 formatKey.SetValue("CommandFlags", order, RegistryValueKind.DWord);
 
                 using var commandKey = formatKey.CreateSubKey("command");
@@ -135,13 +132,12 @@ public class ShellIntegrationService
                 order++;
             }
 
-            // Add separator before Custom option
+            // Add Custom option with separator
             using var customKey = subShellKey.CreateSubKey("custom");
             if (customKey != null)
             {
                 customKey.SetValue("MUIVerb", "Custom...");
-                // CommandFlags: 0x20 = separator before this item
-                customKey.SetValue("CommandFlags", 0x20 | order, RegistryValueKind.DWord);
+                customKey.SetValue("CommandFlags", SeparatorFlag | order, RegistryValueKind.DWord);
 
                 using var commandKey = customKey.CreateSubKey("command");
                 commandKey?.SetValue("", $"\"{executablePath}\" --custom \"%1\"");
@@ -149,100 +145,22 @@ public class ShellIntegrationService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Failed to register for {extension}: {ex.Message}");
+            Debug.WriteLine($"Failed to register menu at {keyPath}: {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Register for system file association (applies to all files of a type).
+    /// Delete a registry key tree, ignoring errors if it doesn't exist.
     /// </summary>
-    private static void RegisterForSystemFileAssociation(string type, string executablePath)
+    private static void DeleteRegistryKey(string keyPath)
     {
-        var keyPath = $"SystemFileAssociations\\{type}\\shell\\{RegistryKeyName}";
-
-        try
-        {
-            // First, completely remove any existing key to ensure clean slate
-            Registry.ClassesRoot.DeleteSubKeyTree(keyPath, false);
-
-            using var shellKey = Registry.ClassesRoot.CreateSubKey(keyPath);
-            if (shellKey == null) return;
-
-            // MUIVerb is the display name for cascading menus
-            shellKey.SetValue("MUIVerb", MenuName);
-            shellKey.SetValue("Icon", $"\"{executablePath}\",0");
-            // SubCommands="" tells Windows to look for shell subkey for submenu items
-            shellKey.SetValue("SubCommands", "");
-
-            using var subShellKey = shellKey.CreateSubKey("shell");
-            if (subShellKey == null) return;
-
-            int order = 0;
-            foreach (var (name, arg) in FormatOptions)
-            {
-                // Use simple names without special characters
-                using var formatKey = subShellKey.CreateSubKey(arg);
-                if (formatKey == null) continue;
-
-                formatKey.SetValue("MUIVerb", $"Convert to {name}");
-                // CommandFlags for ordering (optional, but helps ensure order)
-                formatKey.SetValue("CommandFlags", order, RegistryValueKind.DWord);
-
-                using var commandKey = formatKey.CreateSubKey("command");
-                commandKey?.SetValue("", $"\"{executablePath}\" --convert \"{arg}\" \"%1\"");
-                
-                order++;
-            }
-
-            // Add separator before Custom option
-            using var customKey = subShellKey.CreateSubKey("custom");
-            if (customKey != null)
-            {
-                customKey.SetValue("MUIVerb", "Custom...");
-                // CommandFlags: 0x20 = separator before this item
-                customKey.SetValue("CommandFlags", 0x20 | order, RegistryValueKind.DWord);
-
-                using var commandKey = customKey.CreateSubKey("command");
-                commandKey?.SetValue("", $"\"{executablePath}\" --custom \"%1\"");
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Failed to register for {type}: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Unregister context menu for a specific file extension.
-    /// </summary>
-    private static void UnregisterForExtension(string extension)
-    {
-        var keyPath = $"SystemFileAssociations\\{extension}\\shell\\{RegistryKeyName}";
-
         try
         {
             Registry.ClassesRoot.DeleteSubKeyTree(keyPath, false);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Failed to unregister for {extension}: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Unregister from system file association.
-    /// </summary>
-    private static void UnregisterForSystemFileAssociation(string type)
-    {
-        var keyPath = $"SystemFileAssociations\\{type}\\shell\\{RegistryKeyName}";
-
-        try
-        {
-            Registry.ClassesRoot.DeleteSubKeyTree(keyPath, false);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Failed to unregister for {type}: {ex.Message}");
+            Debug.WriteLine($"Failed to delete registry key {keyPath}: {ex.Message}");
         }
     }
 

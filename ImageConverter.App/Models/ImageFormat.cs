@@ -46,19 +46,6 @@ public static class ImageFormatExtensions
         _ => ".png"
     };
 
-    public static string GetMimeType(this ImageFormat format) => format switch
-    {
-        ImageFormat.Jpeg => "image/jpeg",
-        ImageFormat.Png => "image/png",
-        ImageFormat.WebP => "image/webp",
-        ImageFormat.Gif => "image/gif",
-        ImageFormat.Bmp => "image/bmp",
-        ImageFormat.Tiff => "image/tiff",
-        ImageFormat.Ico => "image/x-icon",
-        ImageFormat.Svg => "image/svg+xml",
-        _ => "image/png"
-    };
-
     public static bool SupportsQuality(this ImageFormat format) => format switch
     {
         ImageFormat.Jpeg => true,
@@ -85,12 +72,4 @@ public static class ImageFormatExtensions
         ImageFormat.Svg => false,  // Cannot convert TO SVG (vector format)
         _ => true
     };
-
-    /// <summary>
-    /// Get all formats that can be used as conversion targets (excludes SVG).
-    /// </summary>
-    public static IEnumerable<ImageFormat> GetConvertibleTargetFormats()
-    {
-        return Enum.GetValues<ImageFormat>().Where(f => f.CanBeConversionTarget());
-    }
 }

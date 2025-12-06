@@ -11,12 +11,12 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using SkiaSharp;
 using Svg.Skia;
+using ImageConverter.Models;
 using ImageFormat = ImageConverter.Models.ImageFormat;
 using ImageInfo = ImageConverter.Models.ImageInfo;
 using ResizeMode = ImageConverter.Models.ResizeMode;
 using ConversionOptions = ImageConverter.Models.ConversionOptions;
 using ConversionResult = ImageConverter.Models.ConversionResult;
-using static ImageConverter.Models.ImageFormatExtensions;
 
 namespace ImageConverter.Services;
 
@@ -25,6 +25,11 @@ namespace ImageConverter.Services;
 /// </summary>
 public class ImageConversionService
 {
+    // Configuration constants
+    private const int MinQuality = 5;
+    private const int MaxQualitySearchIterations = 10;
+    private const int MaxUniqueFileNameAttempts = 1000;
+    
     private static readonly string[] SupportedExtensions =
     [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".ico", ".svg"
@@ -384,11 +389,11 @@ public class ImageConversionService
     {
         var targetBytes = options.TargetSizeKb * 1024;
         var quality = options.Quality;
-        var minQuality = 5;
+        var minQuality = MinQuality;
         var maxQuality = 100;
 
         // Binary search for optimal quality
-        for (int i = 0; i < 10 && minQuality < maxQuality; i++)
+        for (int i = 0; i < MaxQualitySearchIterations && minQuality < maxQuality; i++)
         {
             using var memoryStream = new MemoryStream();
             var testOptions = options with { Quality = quality };
@@ -411,7 +416,7 @@ public class ImageConversionService
         }
 
         // Save with final quality
-        var finalEncoder = GetEncoder(options with { Quality = Math.Max(minQuality - 1, 5) });
+        var finalEncoder = GetEncoder(options with { Quality = Math.Max(minQuality - 1, MinQuality) });
         await image.SaveAsync(outputPath, finalEncoder);
     }
 
@@ -469,7 +474,7 @@ public class ImageConversionService
         {
             newPath = Path.Combine(directory, $"{nameWithoutExt} ({counter}){extension}");
             counter++;
-        } while (File.Exists(newPath) && counter < 1000);
+        } while (File.Exists(newPath) && counter < MaxUniqueFileNameAttempts);
 
         return newPath;
     }
