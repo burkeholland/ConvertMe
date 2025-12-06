@@ -15,9 +15,12 @@ pause > nul
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     echo Requesting administrator privileges...
-    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%~dp0'"
     exit /b
 )
+
+:: Change to script directory (important when elevated)
+cd /d "%~dp0"
 
 :: Run the PowerShell installer
 powershell -ExecutionPolicy Bypass -File "%~dp0Install.ps1"
