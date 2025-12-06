@@ -21,8 +21,11 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel()
     {
         _conversionService = new ImageConversionService();
+        // Only include formats that can be conversion targets (excludes SVG)
         AvailableFormats = new ObservableCollection<FormatOption>(
-            Enum.GetValues<ImageFormat>().Select(f => new FormatOption(f))
+            Enum.GetValues<ImageFormat>()
+                .Where(f => f.CanBeConversionTarget())
+                .Select(f => new FormatOption(f))
         );
         SelectedFormat = AvailableFormats.First(f => f.Format == ImageFormat.Png);
         ConversionHistory = [];
@@ -162,7 +165,7 @@ public partial class MainViewModel : ObservableObject
         var dialog = new OpenFileDialog
         {
             Title = "Select Image to Convert",
-            Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp;*.tiff;*.tif|All Files|*.*",
+            Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.webp;*.tiff;*.tif;*.svg|All Files|*.*",
             CheckFileExists = true
         };
 
