@@ -103,25 +103,31 @@ public class ShellIntegrationService
 
         try
         {
+            // First, completely remove any existing key to ensure clean slate
+            Registry.ClassesRoot.DeleteSubKeyTree(keyPath, false);
+
             using var shellKey = Registry.ClassesRoot.CreateSubKey(keyPath);
             if (shellKey == null) return;
 
-            shellKey.SetValue("", MenuName);
-            shellKey.SetValue("Icon", $"\"{executablePath}\",0");
-            shellKey.SetValue("Position", "Top");
+            // MUIVerb is the display name for cascading menus
             shellKey.SetValue("MUIVerb", MenuName);
+            shellKey.SetValue("Icon", $"\"{executablePath}\",0");
+            // SubCommands="" tells Windows to look for shell subkey for submenu items
             shellKey.SetValue("SubCommands", "");
 
             using var subShellKey = shellKey.CreateSubKey("shell");
             if (subShellKey == null) return;
 
-            int order = 1;
+            int order = 0;
             foreach (var (name, arg) in FormatOptions)
             {
-                using var formatKey = subShellKey.CreateSubKey($"{order:D2}_{arg}");
+                // Use simple names without special characters
+                using var formatKey = subShellKey.CreateSubKey(arg);
                 if (formatKey == null) continue;
 
                 formatKey.SetValue("MUIVerb", $"Convert to {name}");
+                // CommandFlags for ordering (optional, but helps ensure order)
+                formatKey.SetValue("CommandFlags", order, RegistryValueKind.DWord);
 
                 using var commandKey = formatKey.CreateSubKey("command");
                 commandKey?.SetValue("", $"\"{executablePath}\" --convert \"{arg}\" \"%1\"");
@@ -129,11 +135,13 @@ public class ShellIntegrationService
                 order++;
             }
 
-            // Add "Custom..." option at the end
-            using var customKey = subShellKey.CreateSubKey($"{order:D2}_custom");
+            // Add separator before Custom option
+            using var customKey = subShellKey.CreateSubKey("custom");
             if (customKey != null)
             {
                 customKey.SetValue("MUIVerb", "Custom...");
+                // CommandFlags: 0x20 = separator before this item
+                customKey.SetValue("CommandFlags", 0x20 | order, RegistryValueKind.DWord);
 
                 using var commandKey = customKey.CreateSubKey("command");
                 commandKey?.SetValue("", $"\"{executablePath}\" --custom \"%1\"");
@@ -154,25 +162,31 @@ public class ShellIntegrationService
 
         try
         {
+            // First, completely remove any existing key to ensure clean slate
+            Registry.ClassesRoot.DeleteSubKeyTree(keyPath, false);
+
             using var shellKey = Registry.ClassesRoot.CreateSubKey(keyPath);
             if (shellKey == null) return;
 
-            shellKey.SetValue("", MenuName);
-            shellKey.SetValue("Icon", $"\"{executablePath}\",0");
-            shellKey.SetValue("Position", "Top");
+            // MUIVerb is the display name for cascading menus
             shellKey.SetValue("MUIVerb", MenuName);
+            shellKey.SetValue("Icon", $"\"{executablePath}\",0");
+            // SubCommands="" tells Windows to look for shell subkey for submenu items
             shellKey.SetValue("SubCommands", "");
 
             using var subShellKey = shellKey.CreateSubKey("shell");
             if (subShellKey == null) return;
 
-            int order = 1;
+            int order = 0;
             foreach (var (name, arg) in FormatOptions)
             {
-                using var formatKey = subShellKey.CreateSubKey($"{order:D2}_{arg}");
+                // Use simple names without special characters
+                using var formatKey = subShellKey.CreateSubKey(arg);
                 if (formatKey == null) continue;
 
                 formatKey.SetValue("MUIVerb", $"Convert to {name}");
+                // CommandFlags for ordering (optional, but helps ensure order)
+                formatKey.SetValue("CommandFlags", order, RegistryValueKind.DWord);
 
                 using var commandKey = formatKey.CreateSubKey("command");
                 commandKey?.SetValue("", $"\"{executablePath}\" --convert \"{arg}\" \"%1\"");
@@ -180,10 +194,13 @@ public class ShellIntegrationService
                 order++;
             }
 
-            using var customKey = subShellKey.CreateSubKey($"{order:D2}_custom");
+            // Add separator before Custom option
+            using var customKey = subShellKey.CreateSubKey("custom");
             if (customKey != null)
             {
                 customKey.SetValue("MUIVerb", "Custom...");
+                // CommandFlags: 0x20 = separator before this item
+                customKey.SetValue("CommandFlags", 0x20 | order, RegistryValueKind.DWord);
 
                 using var commandKey = customKey.CreateSubKey("command");
                 commandKey?.SetValue("", $"\"{executablePath}\" --custom \"%1\"");

@@ -96,12 +96,7 @@ public partial class App : Application
 
             var result = await _conversionService.ConvertAsync(filePath, options);
 
-            if (result.Success && !string.IsNullOrEmpty(result.OutputPath))
-            {
-                // Open folder with file selected
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{result.OutputPath}\"");
-            }
-            else
+            if (!result.Success)
             {
                 MessageBox.Show(
                     result.ErrorMessage ?? "Conversion failed",

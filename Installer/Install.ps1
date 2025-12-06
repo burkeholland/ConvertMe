@@ -108,28 +108,64 @@ if (-not $NoShellIntegration) {
     Write-Host "[3/4] Registering shell context menu..." -ForegroundColor Cyan
     
     $imageExtensions = @(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".ico")
-    $menuName = "Convert Image..."
     $registryKeyName = "ImageConverter"
+    $menuName = "Convert Image"
+    
+    # Format options for submenu
+    $formatOptions = @(
+        @{ Name = "JPEG"; Arg = "jpeg" },
+        @{ Name = "PNG"; Arg = "png" },
+        @{ Name = "WebP"; Arg = "webp" },
+        @{ Name = "GIF"; Arg = "gif" },
+        @{ Name = "BMP"; Arg = "bmp" },
+        @{ Name = "TIFF"; Arg = "tiff" },
+        @{ Name = "ICO"; Arg = "ico" }
+    )
     
     foreach ($ext in $imageExtensions) {
         $keyPath = "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\$ext\shell\$registryKeyName"
         
         try {
-            # Create shell key
-            if (-not (Test-Path $keyPath)) {
-                New-Item -Path $keyPath -Force | Out-Null
+            # Remove existing key completely first
+            if (Test-Path $keyPath) {
+                Remove-Item -Path $keyPath -Recurse -Force
             }
             
-            Set-ItemProperty -Path $keyPath -Name "(Default)" -Value $menuName
+            # Create main shell key
+            New-Item -Path $keyPath -Force | Out-Null
+            
+            # Set properties for cascading menu
+            Set-ItemProperty -Path $keyPath -Name "MUIVerb" -Value $menuName
             Set-ItemProperty -Path $keyPath -Name "Icon" -Value "`"$exePath`",0"
-            Set-ItemProperty -Path $keyPath -Name "Position" -Value "Top"
+            Set-ItemProperty -Path $keyPath -Name "SubCommands" -Value ""
             
-            # Create command key
-            $commandPath = "$keyPath\command"
-            if (-not (Test-Path $commandPath)) {
+            # Create shell subkey for submenu items
+            $shellPath = "$keyPath\shell"
+            New-Item -Path $shellPath -Force | Out-Null
+            
+            # Add format options
+            $order = 0
+            foreach ($format in $formatOptions) {
+                $formatPath = "$shellPath\$($format.Arg)"
+                New-Item -Path $formatPath -Force | Out-Null
+                Set-ItemProperty -Path $formatPath -Name "MUIVerb" -Value "Convert to $($format.Name)"
+                
+                $commandPath = "$formatPath\command"
                 New-Item -Path $commandPath -Force | Out-Null
+                Set-ItemProperty -Path $commandPath -Name "(Default)" -Value "`"$exePath`" --convert `"$($format.Arg)`" `"%1`""
+                
+                $order++
             }
-            Set-ItemProperty -Path $commandPath -Name "(Default)" -Value "`"$exePath`" `"%1`""
+            
+            # Add Custom option with separator
+            $customPath = "$shellPath\custom"
+            New-Item -Path $customPath -Force | Out-Null
+            Set-ItemProperty -Path $customPath -Name "MUIVerb" -Value "Custom..."
+            Set-ItemProperty -Path $customPath -Name "CommandFlags" -Value 0x20 -Type DWord
+            
+            $commandPath = "$customPath\command"
+            New-Item -Path $commandPath -Force | Out-Null
+            Set-ItemProperty -Path $commandPath -Name "(Default)" -Value "`"$exePath`" --custom `"%1`""
             
             Write-Host "  Registered for $ext" -ForegroundColor Green
         }
@@ -141,18 +177,43 @@ if (-not $NoShellIntegration) {
     # Also register for generic "image" type
     $keyPath = "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\$registryKeyName"
     try {
-        if (-not (Test-Path $keyPath)) {
-            New-Item -Path $keyPath -Force | Out-Null
+        # Remove existing key completely first
+        if (Test-Path $keyPath) {
+            Remove-Item -Path $keyPath -Recurse -Force
         }
-        Set-ItemProperty -Path $keyPath -Name "(Default)" -Value $menuName
-        Set-ItemProperty -Path $keyPath -Name "Icon" -Value "`"$exePath`",0"
-        Set-ItemProperty -Path $keyPath -Name "Position" -Value "Top"
         
-        $commandPath = "$keyPath\command"
-        if (-not (Test-Path $commandPath)) {
+        # Create main shell key
+        New-Item -Path $keyPath -Force | Out-Null
+        
+        # Set properties for cascading menu
+        Set-ItemProperty -Path $keyPath -Name "MUIVerb" -Value $menuName
+        Set-ItemProperty -Path $keyPath -Name "Icon" -Value "`"$exePath`",0"
+        Set-ItemProperty -Path $keyPath -Name "SubCommands" -Value ""
+        
+        # Create shell subkey for submenu items
+        $shellPath = "$keyPath\shell"
+        New-Item -Path $shellPath -Force | Out-Null
+        
+        # Add format options
+        foreach ($format in $formatOptions) {
+            $formatPath = "$shellPath\$($format.Arg)"
+            New-Item -Path $formatPath -Force | Out-Null
+            Set-ItemProperty -Path $formatPath -Name "MUIVerb" -Value "Convert to $($format.Name)"
+            
+            $commandPath = "$formatPath\command"
             New-Item -Path $commandPath -Force | Out-Null
+            Set-ItemProperty -Path $commandPath -Name "(Default)" -Value "`"$exePath`" --convert `"$($format.Arg)`" `"%1`""
         }
-        Set-ItemProperty -Path $commandPath -Name "(Default)" -Value "`"$exePath`" `"%1`""
+        
+        # Add Custom option with separator
+        $customPath = "$shellPath\custom"
+        New-Item -Path $customPath -Force | Out-Null
+        Set-ItemProperty -Path $customPath -Name "MUIVerb" -Value "Custom..."
+        Set-ItemProperty -Path $customPath -Name "CommandFlags" -Value 0x20 -Type DWord
+        
+        $commandPath = "$customPath\command"
+        New-Item -Path $commandPath -Force | Out-Null
+        Set-ItemProperty -Path $commandPath -Name "(Default)" -Value "`"$exePath`" --custom `"%1`""
         
         Write-Host "  Registered for all image types" -ForegroundColor Green
     }
@@ -184,7 +245,9 @@ Write-Host "Image Converter has been installed to:" -ForegroundColor White
 Write-Host "  $InstallPath" -ForegroundColor Gray
 Write-Host ""
 Write-Host "You can now:" -ForegroundColor White
-Write-Host "  - Right-click any image and select 'Convert Image...'" -ForegroundColor Gray
+Write-Host "  - Right-click any image and select 'Convert Image' for quick format options" -ForegroundColor Gray
+Write-Host "  - Choose a format (JPEG, PNG, WebP, etc.) for instant conversion" -ForegroundColor Gray
+Write-Host "  - Select 'Custom...' for advanced options (quality, size, etc.)" -ForegroundColor Gray
 Write-Host "  - Launch from Start Menu: 'Image Converter'" -ForegroundColor Gray
 Write-Host ""
 
@@ -192,7 +255,7 @@ Write-Host ""
 $osVersion = [System.Environment]::OSVersion.Version
 if ($osVersion.Build -ge 22000) {
     Write-Host "Note for Windows 11:" -ForegroundColor Yellow
-    Write-Host "  The 'Convert Image...' option appears in the classic context menu." -ForegroundColor Gray
+    Write-Host "  The 'Convert Image' menu appears in the classic context menu." -ForegroundColor Gray
     Write-Host "  Right-click an image, then click 'Show more options' to see it," -ForegroundColor Gray
     Write-Host "  or hold Shift while right-clicking to show the classic menu." -ForegroundColor Gray
     Write-Host ""
