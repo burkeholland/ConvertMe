@@ -2,6 +2,8 @@
 
 A modern Windows application for converting images between formats directly from the right-click context menu.
 
+![Image Converter](docs/screenshots/main-window.png)
+
 ![Windows 10/11](https://img.shields.io/badge/Windows-10%2F11-blue)
 ![.NET 8](https://img.shields.io/badge/.NET-8.0-purple)
 ![License](https://img.shields.io/badge/License-MIT-green)
