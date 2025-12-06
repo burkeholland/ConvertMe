@@ -53,29 +53,52 @@
                                 AllowDrop="True"
                                 DragOver="OnDragOver"
                                 Drop="OnDrop">
-                            <StackPanel HorizontalAlignment="Center">
-                                <ui:SymbolIcon Symbol="Image24" 
-                                               FontSize="48" 
+                            <Grid>
+                                <!-- Empty state: no image loaded -->
+                                <StackPanel HorizontalAlignment="Center"
+                                            Visibility="{Binding IsImageLoaded, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}">
+                                    <ui:SymbolIcon Symbol="Image24" 
+                                                   FontSize="48" 
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    
+                                    <TextBlock Text="Drag &amp; drop an image here or click to browse"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                HorizontalAlignment="Center"
-                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                               Margin="0,12,0,12" />
+                                    
+                                    <ui:Button Content="Browse..." 
+                                               Appearance="Primary"
+                                               Command="{Binding BrowseSourceCommand}"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
                                 
-                                <TextBlock Text="{Binding SourceFilePath, Converter={StaticResource FileName}}"
-                                           FontSize="14"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,12,0,8"
-                                           Visibility="{Binding IsImageLoaded, Converter={StaticResource BoolToVisibility}}" />
-                                
-                                <TextBlock Text="Drag &amp; drop an image here or click to browse"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,8,0,12"
-                                           Visibility="{Binding IsImageLoaded, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
-                                
-                                <ui:Button Content="Browse..." 
-                                           Appearance="Primary"
-                                           Command="{Binding BrowseSourceCommand}"
-                                           HorizontalAlignment="Center" />
-                            </StackPanel>
+                                <!-- Image loaded: show preview -->
+                                <StackPanel Visibility="{Binding IsImageLoaded, Converter={StaticResource BoolToVisibility}}">
+                                    <Border CornerRadius="6"
+                                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                            HorizontalAlignment="Center"
+                                            MaxHeight="200"
+                                            Padding="4">
+                                        <Image Source="{Binding SourceFilePath}"
+                                               MaxHeight="192"
+                                               MaxWidth="400"
+                                               Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Border>
+                                    
+                                    <TextBlock Text="{Binding SourceFilePath, Converter={StaticResource FileName}}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,12,0,8" />
+                                    
+                                    <ui:Button Content="Change Image..." 
+                                               Appearance="Secondary"
+                                               Command="{Binding BrowseSourceCommand}"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
                         </Border>
 
                         <!-- Image Info -->
