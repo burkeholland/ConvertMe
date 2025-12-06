@@ -32,36 +32,48 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
     exit 1
 }
 
-# Find the published application
+# Find the application executable
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
+$sourceExe = Join-Path $scriptDir "ImageConverter.exe"
 
-if (-not (Test-Path $publishDir)) {
-    # Try debug folder
-    $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Debug\net8.0-windows\win-x64\publish"
+# Check if we're running from a distribution (EXE in same folder)
+if (Test-Path $sourceExe) {
+    $distributionMode = $true
+    Write-Host "Installing from distribution package..." -ForegroundColor Gray
 }
-
-if (-not (Test-Path $publishDir)) {
-    # Try to build it
-    Write-Host "Building application..." -ForegroundColor Yellow
-    $projectPath = Join-Path $scriptDir "..\ImageConverter.App\ImageConverter.App.csproj"
+else {
+    $distributionMode = $false
+    # Try to find published application in development structure
+    $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
     
-    if (Test-Path $projectPath) {
-        Push-Location (Split-Path -Parent $projectPath)
-        dotnet publish -c Release -r win-x64 --self-contained true
-        Pop-Location
-        $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
+    if (-not (Test-Path $publishDir)) {
+        $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Debug\net8.0-windows\win-x64\publish"
     }
+    
+    if (-not (Test-Path $publishDir)) {
+        # Try to build it
+        Write-Host "Building application..." -ForegroundColor Yellow
+        $projectPath = Join-Path $scriptDir "..\ImageConverter.App\ImageConverter.App.csproj"
+        
+        if (Test-Path $projectPath) {
+            Push-Location (Split-Path -Parent $projectPath)
+            dotnet publish -c Release -r win-x64 --self-contained true
+            Pop-Location
+            $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
+        }
+    }
+    
+    if (-not (Test-Path $publishDir)) {
+        Write-Host "Error: Could not find ImageConverter.exe!" -ForegroundColor Red
+        Write-Host "Make sure the executable is in the same folder as this script." -ForegroundColor Yellow
+        Read-Host "Press Enter to exit"
+        exit 1
+    }
+    
+    $sourceExe = Join-Path $publishDir "ImageConverter.exe"
 }
 
-if (-not (Test-Path $publishDir)) {
-    Write-Host "Error: Could not find published application!" -ForegroundColor Red
-    Write-Host "Please run 'dotnet publish -c Release -r win-x64 --self-contained true' first." -ForegroundColor Yellow
-    Read-Host "Press Enter to exit"
-    exit 1
-}
-
-Write-Host "Source: $publishDir" -ForegroundColor Gray
+Write-Host "Source: $sourceExe" -ForegroundColor Gray
 Write-Host "Target: $InstallPath" -ForegroundColor Gray
 Write-Host ""
 
@@ -73,7 +85,15 @@ if (-not (Test-Path $InstallPath)) {
 
 # Copy files
 Write-Host "[2/4] Copying application files..." -ForegroundColor Cyan
-Copy-Item -Path "$publishDir\*" -Destination $InstallPath -Recurse -Force
+if ($distributionMode) {
+    # Just copy the single executable
+    Copy-Item -Path $sourceExe -Destination $InstallPath -Force
+}
+else {
+    # Copy all files from publish directory
+    $publishDir = Split-Path -Parent $sourceExe
+    Copy-Item -Path "$publishDir\*" -Destination $InstallPath -Recurse -Force
+}
 
 $exePath = Join-Path $InstallPath "ImageConverter.exe"
 
