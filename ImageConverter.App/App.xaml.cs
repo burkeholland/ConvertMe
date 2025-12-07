@@ -133,7 +133,7 @@ public partial class App : Application
             var exePath = Environment.ProcessPath ?? "";
             ShellIntegrationService.Register(exePath);
             MessageBox.Show(
-                "Image Converter has been added to the right-click menu!",
+                "ConvertMe has been added to the right-click menu!",
                 "Registration Successful",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
@@ -158,7 +158,7 @@ public partial class App : Application
         {
             ShellIntegrationService.Unregister();
             MessageBox.Show(
-                "Image Converter has been removed from the right-click menu.",
+                "ConvertMe has been removed from the right-click menu.",
                 "Unregistration Successful",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);

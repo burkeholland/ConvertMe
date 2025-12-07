@@ -1,8 +1,8 @@
 @echo off
-:: Build script for Image Converter
+:: Build script for ConvertMe
 
 echo ========================================
-echo   Building Image Converter
+echo   Building ConvertMe
 echo ========================================
 echo.
 

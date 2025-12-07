@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 <#
 .SYNOPSIS
-    Registers Image Converter with Windows 11's modern context menu using Sparse Package.
+    Registers ConvertMe with Windows 11's modern context menu using Sparse Package.
 
 .DESCRIPTION
     This script registers the application with a package identity, allowing it to appear
@@ -78,8 +78,8 @@ $manifest = @"
   <Identity Name="$PackageName" Publisher="$Publisher" Version="$Version" ProcessorArchitecture="x64" />
 
   <Properties>
-    <DisplayName>Image Converter</DisplayName>
-    <PublisherDisplayName>Image Converter</PublisherDisplayName>
+    <DisplayName>ConvertMe</DisplayName>
+    <PublisherDisplayName>ConvertMe</PublisherDisplayName>
     <Description>Convert images between formats from the right-click menu</Description>
     <Logo>Assets\app.png</Logo>
   </Properties>
@@ -98,7 +98,7 @@ $manifest = @"
 
   <Applications>
     <Application Id="App" Executable="ImageConverter.exe" EntryPoint="Windows.FullTrustApplication">
-      <uap:VisualElements DisplayName="Image Converter" 
+      <uap:VisualElements DisplayName="ConvertMe" 
                           Description="Convert images between formats"
                           BackgroundColor="transparent" 
                           Square150x150Logo="Assets\app.png"
@@ -187,7 +187,7 @@ $regPath = "HKCU:\Software\Classes\CLSID\{$clsid}"
 try {
     # Create CLSID entry
     New-Item -Path $regPath -Force | Out-Null
-    Set-ItemProperty -Path $regPath -Name "(Default)" -Value "Image Converter Context Menu"
+    Set-ItemProperty -Path $regPath -Name "(Default)" -Value "ConvertMe Context Menu"
     
     # Create InprocServer32 (but we'll use LocalServer32 for exe)
     $localServerPath = "$regPath\LocalServer32"

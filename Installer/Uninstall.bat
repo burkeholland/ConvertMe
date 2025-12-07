@@ -1,12 +1,12 @@
 @echo off
-:: Image Converter Uninstaller
+:: ConvertMe Uninstaller
 :: This batch file runs the PowerShell uninstaller with administrator privileges
 
 echo ========================================
-echo   Image Converter Uninstaller
+echo   ConvertMe Uninstaller
 echo ========================================
 echo.
-echo This will remove Image Converter from your system.
+echo This will remove ConvertMe from your system.
 echo.
 echo Press any key to continue, or close this window to cancel...
 pause > nul

@@ -1,10 +1,10 @@
 #Requires -RunAsAdministrator
 <#
 .SYNOPSIS
-    Installs Image Converter with shell integration.
+    Installs ConvertMe with shell integration.
 
 .DESCRIPTION
-    This script installs the Image Converter application to Program Files and 
+    This script installs the ConvertMe application to Program Files and 
     registers it in the Windows shell context menu for image files.
 
 .EXAMPLE
@@ -19,7 +19,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  Image Converter Installer" -ForegroundColor Cyan
+Write-Host "  ConvertMe Installer" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -226,7 +226,7 @@ else {
 
 # Create Start Menu shortcut
 Write-Host "[4/4] Creating Start Menu shortcut..." -ForegroundColor Cyan
-$startMenuPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Image Converter.lnk"
+$startMenuPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\ConvertMe.lnk"
 
 $WScriptShell = New-Object -ComObject WScript.Shell
 $shortcut = $WScriptShell.CreateShortcut($startMenuPath)
@@ -240,14 +240,14 @@ Write-Host "========================================" -ForegroundColor Green
 Write-Host "  Installation Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "Image Converter has been installed to:" -ForegroundColor White
+Write-Host "ConvertMe has been installed to:" -ForegroundColor White
 Write-Host "  $InstallPath" -ForegroundColor Gray
 Write-Host ""
 Write-Host "You can now:" -ForegroundColor White
 Write-Host "  - Right-click any image and select 'Convert Image' for quick format options" -ForegroundColor Gray
 Write-Host "  - Choose a format (JPEG, PNG, WebP, etc.) for instant conversion" -ForegroundColor Gray
 Write-Host "  - Select 'Custom...' for advanced options (quality, size, etc.)" -ForegroundColor Gray
-Write-Host "  - Launch from Start Menu: 'Image Converter'" -ForegroundColor Gray
+Write-Host "  - Launch from Start Menu: 'ConvertMe'" -ForegroundColor Gray
 Write-Host ""
 
 # Note about Windows 11

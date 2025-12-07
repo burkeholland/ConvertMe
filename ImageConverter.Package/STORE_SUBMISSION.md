@@ -1,6 +1,6 @@
 # Microsoft Store Submission Guide
 
-This document outlines the steps to publish Image Converter to the Microsoft Store.
+This document outlines the steps to publish ConvertMe to the Microsoft Store.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ This document outlines the steps to publish Image Converter to the Microsoft Sto
 ### 1. Reserve App Name in Partner Center
 
 1. Go to Partner Center → Apps and Games → New product → MSIX or PWA app
-2. Reserve the name "Image Converter" (or your preferred name)
+2. Reserve the name "ConvertMe" (or your preferred name)
 3. Note down your **Publisher ID** (format: `CN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`)
 
 ### 2. Update Package Identity
@@ -64,7 +64,7 @@ msbuild ImageConverter.Package\ImageConverter.Package.wapproj /p:Configuration=R
 
 ### Description (suggested)
 ```
-Image Converter is a fast, modern Windows app for converting images between formats.
+ConvertMe is a fast, modern Windows app for converting images between formats.
 
 Features:
 • Convert between JPEG, PNG, WebP, GIF, BMP, TIFF, and ICO

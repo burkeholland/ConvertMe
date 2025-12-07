@@ -6,7 +6,7 @@ echo ========================================
 echo   Windows 11 Context Menu Setup
 echo ========================================
 echo.
-echo This will register Image Converter in Windows 11's MAIN context menu
+echo This will register ConvertMe in Windows 11's MAIN context menu
 echo (not just "Show more options").
 echo.
 echo REQUIREMENTS:

@@ -12,7 +12,7 @@
     <Version>1.0.0</Version>
     <Authors>Burke Holland</Authors>
     <Company>Burke Holland</Company>
-    <Product>Image Converter</Product>
+    <Product>ConvertMe</Product>
     <Description>A modern Windows image format converter with shell integration</Description>
     <Platforms>AnyCPU;x64</Platforms>
     

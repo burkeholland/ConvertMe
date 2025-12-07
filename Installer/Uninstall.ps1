@@ -1,10 +1,10 @@
 #Requires -RunAsAdministrator
 <#
 .SYNOPSIS
-    Uninstalls Image Converter and removes shell integration.
+    Uninstalls ConvertMe and removes shell integration.
 
 .DESCRIPTION
-    This script removes the Image Converter application and its shell context menu entries.
+    This script removes the ConvertMe application and its shell context menu entries.
 
 .EXAMPLE
     .\Uninstall.ps1
@@ -17,7 +17,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  Image Converter Uninstaller" -ForegroundColor Cyan
+Write-Host "  ConvertMe Uninstaller" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -64,7 +64,7 @@ catch {
 
 # Remove Start Menu shortcut
 Write-Host "[2/3] Removing Start Menu shortcut..." -ForegroundColor Cyan
-$startMenuPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Image Converter.lnk"
+$startMenuPath = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\ConvertMe.lnk"
 
 if (Test-Path $startMenuPath) {
     Remove-Item -Path $startMenuPath -Force
@@ -95,7 +95,7 @@ Write-Host "========================================" -ForegroundColor Green
 Write-Host "  Uninstallation Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "Image Converter has been removed from your system." -ForegroundColor White
+Write-Host "ConvertMe has been removed from your system." -ForegroundColor White
 Write-Host ""
 
 Read-Host "Press Enter to exit"

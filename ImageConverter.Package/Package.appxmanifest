@@ -12,7 +12,7 @@
             ProcessorArchitecture="x64" />
 
   <Properties>
-    <DisplayName>Image Converter</DisplayName>
+    <DisplayName>ConvertMe</DisplayName>
     <PublisherDisplayName>Burke Holland</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <Description>Convert images between formats directly from the right-click context menu. Supports JPEG, PNG, WebP, GIF, BMP, TIFF, ICO, and SVG formats.</Description>
@@ -37,7 +37,7 @@
                  EntryPoint="Windows.FullTrustApplication">
       
       <uap:VisualElements
-        DisplayName="Image Converter"
+        DisplayName="ConvertMe"
         Description="Convert images between formats from the right-click menu"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"

@@ -1,12 +1,12 @@
 @echo off
-:: Image Converter Installer
+:: ConvertMe Installer
 :: This batch file runs the PowerShell installer with administrator privileges
 
 echo ========================================
-echo   Image Converter Installer
+echo   ConvertMe Installer
 echo ========================================
 echo.
-echo This will install Image Converter and add it to your right-click menu.
+echo This will install ConvertMe and add it to your right-click menu.
 echo.
 echo Press any key to continue, or close this window to cancel...
 pause > nul

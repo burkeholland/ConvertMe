@@ -6,7 +6,7 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:vm="clr-namespace:ImageConverter.ViewModels"
         mc:Ignorable="d"
-        Title="Image Converter" 
+        Title="ConvertMe" 
         Height="720" 
         Width="520"
         MinHeight="600"
@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
 
         <!-- Title Bar -->
-        <ui:TitleBar Grid.Row="0" Title="Image Converter" ShowMaximize="False">
+        <ui:TitleBar Grid.Row="0" Title="ConvertMe" ShowMaximize="False">
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="pack://application:,,,/Assets/app.png" />
             </ui:TitleBar.Icon>

@@ -1,8 +1,8 @@
-# Image Converter
+# ConvertMe
 
 A modern Windows application for converting images between formats directly from the right-click context menu.
 
-![Image Converter](docs/screenshots/main-window.png)
+![ConvertMe](docs/screenshots/main-window.png)
 
 ![Windows 10/11](https://img.shields.io/badge/Windows-10%2F11-blue)
 ![.NET 8](https://img.shields.io/badge/.NET-8.0-purple)
@@ -82,7 +82,7 @@ By default on Windows 11, "Convert Image..." appears under "Show more options". 
 2. Run `Packaging\RegisterWin11Menu.bat` as Administrator
 
 ### From the Application
-1. Launch Image Converter from the Start Menu
+1. Launch ConvertMe from the Start Menu
 2. Drag & drop an image onto the window, or click "Browse..." to select a file
 3. Configure your conversion options:
    - Select output format
