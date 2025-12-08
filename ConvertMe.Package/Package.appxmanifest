@@ -8,7 +8,7 @@
 
   <Identity Name="BurkeHolland.ConvertMe"
             Publisher="CN=56DAF303-E719-4792-82B7-B59D3194B422"
-            Version="1.0.2.0"
+            Version="1.0.3.0"
             ProcessorArchitecture="x64" />
 
   <Properties>
