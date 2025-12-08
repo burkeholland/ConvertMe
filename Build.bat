@@ -18,7 +18,7 @@ if %errorlevel% neq 0 (
 cd /d "%~dp0"
 
 echo [1/3] Restoring packages...
-dotnet restore ImageConverter.App\ImageConverter.App.csproj
+dotnet restore ConvertMe.App\ConvertMe.App.csproj
 if %errorlevel% neq 0 (
     echo Error: Package restore failed!
     pause
@@ -27,7 +27,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [2/3] Building application...
-dotnet build ImageConverter.App\ImageConverter.App.csproj -c Release
+dotnet build ConvertMe.App\ConvertMe.App.csproj -c Release
 if %errorlevel% neq 0 (
     echo Error: Build failed!
     pause
@@ -36,7 +36,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [3/3] Publishing self-contained executable...
-dotnet publish ImageConverter.App\ImageConverter.App.csproj -c Release -r win-x64 --self-contained true
+dotnet publish ConvertMe.App\ConvertMe.App.csproj -c Release -r win-x64 --self-contained true
 if %errorlevel% neq 0 (
     echo Error: Publish failed!
     pause
@@ -49,7 +49,7 @@ echo   Build Complete!
 echo ========================================
 echo.
 echo Output location:
-echo   ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish\
+echo   ConvertMe.App\bin\Release\net8.0-windows\win-x64\publish\
 echo.
 echo To install, run:
 echo   Installer\Install.bat

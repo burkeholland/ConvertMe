@@ -11,14 +11,14 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using SkiaSharp;
 using Svg.Skia;
-using ImageConverter.Models;
-using ImageFormat = ImageConverter.Models.ImageFormat;
-using ImageInfo = ImageConverter.Models.ImageInfo;
-using ResizeMode = ImageConverter.Models.ResizeMode;
-using ConversionOptions = ImageConverter.Models.ConversionOptions;
-using ConversionResult = ImageConverter.Models.ConversionResult;
+using ConvertMe.Models;
+using ImageFormat = ConvertMe.Models.ImageFormat;
+using ImageInfo = ConvertMe.Models.ImageInfo;
+using ResizeMode = ConvertMe.Models.ResizeMode;
+using ConversionOptions = ConvertMe.Models.ConversionOptions;
+using ConversionResult = ConvertMe.Models.ConversionResult;
 
-namespace ImageConverter.Services;
+namespace ConvertMe.Services;
 
 /// <summary>
 /// Service for converting images between formats with quality and size control.

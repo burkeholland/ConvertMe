@@ -1,15 +1,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ImageConverter.Models;
-using ImageConverter.Services;
+using ConvertMe.Models;
+using ConvertMe.Services;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
-using ImageFormat = ImageConverter.Models.ImageFormat;
-using ResizeMode = ImageConverter.Models.ResizeMode;
+using ImageFormat = ConvertMe.Models.ImageFormat;
+using ResizeMode = ConvertMe.Models.ResizeMode;
 
-namespace ImageConverter.ViewModels;
+namespace ConvertMe.ViewModels;
 
 /// <summary>
 /// Main view model for the image converter application.

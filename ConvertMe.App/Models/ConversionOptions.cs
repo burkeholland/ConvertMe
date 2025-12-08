@@ -1,4 +1,4 @@
-namespace ImageConverter.Models;
+namespace ConvertMe.Models;
 
 /// <summary>
 /// Options for image conversion including format, quality, and resize settings.

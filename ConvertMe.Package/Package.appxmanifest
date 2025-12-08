@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
          xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
@@ -6,9 +6,9 @@
          xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
          IgnorableNamespaces="uap uap3 rescap desktop">
 
-  <Identity Name="BurkeHolland.ImageConverter"
-            Publisher="CN=REPLACE_WITH_YOUR_PUBLISHER_ID"
-            Version="1.0.0.0"
+  <Identity Name="BurkeHolland.ConvertMe"
+            Publisher="CN=56DAF303-E719-4792-82B7-B59D3194B422"
+            Version="1.0.2.0"
             ProcessorArchitecture="x64" />
 
   <Properties>
@@ -33,7 +33,7 @@
 
   <Applications>
     <Application Id="App"
-                 Executable="ImageConverter.exe"
+                 Executable="ConvertMe.exe"
                  EntryPoint="Windows.FullTrustApplication">
       
       <uap:VisualElements

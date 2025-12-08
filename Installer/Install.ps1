@@ -12,7 +12,7 @@
 #>
 
 param(
-    [string]$InstallPath = "$env:ProgramFiles\ImageConverter",
+    [string]$InstallPath = "$env:ProgramFiles\ConvertMe",
     [switch]$NoShellIntegration
 )
 
@@ -34,7 +34,7 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
 
 # Find the application executable
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$sourceExe = Join-Path $scriptDir "ImageConverter.exe"
+$sourceExe = Join-Path $scriptDir "ConvertMe.exe"
 
 # Check if we're running from a distribution (EXE in same folder)
 if (Test-Path $sourceExe) {
@@ -44,33 +44,33 @@ if (Test-Path $sourceExe) {
 else {
     $distributionMode = $false
     # Try to find published application in development structure
-    $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
+    $publishDir = Join-Path $scriptDir "..\ConvertMe.App\bin\Release\net8.0-windows\win-x64\publish"
     
     if (-not (Test-Path $publishDir)) {
-        $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Debug\net8.0-windows\win-x64\publish"
+        $publishDir = Join-Path $scriptDir "..\ConvertMe.App\bin\Debug\net8.0-windows\win-x64\publish"
     }
     
     if (-not (Test-Path $publishDir)) {
         # Try to build it
         Write-Host "Building application..." -ForegroundColor Yellow
-        $projectPath = Join-Path $scriptDir "..\ImageConverter.App\ImageConverter.App.csproj"
+        $projectPath = Join-Path $scriptDir "..\ConvertMe.App\ConvertMe.App.csproj"
         
         if (Test-Path $projectPath) {
             Push-Location (Split-Path -Parent $projectPath)
             dotnet publish -c Release -r win-x64 --self-contained true
             Pop-Location
-            $publishDir = Join-Path $scriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
+            $publishDir = Join-Path $scriptDir "..\ConvertMe.App\bin\Release\net8.0-windows\win-x64\publish"
         }
     }
     
     if (-not (Test-Path $publishDir)) {
-        Write-Host "Error: Could not find ImageConverter.exe!" -ForegroundColor Red
+        Write-Host "Error: Could not find ConvertMe.exe!" -ForegroundColor Red
         Write-Host "Make sure the executable is in the same folder as this script." -ForegroundColor Yellow
         Read-Host "Press Enter to exit"
         exit 1
     }
     
-    $sourceExe = Join-Path $publishDir "ImageConverter.exe"
+    $sourceExe = Join-Path $publishDir "ConvertMe.exe"
 }
 
 Write-Host "Source: $sourceExe" -ForegroundColor Gray
@@ -95,7 +95,7 @@ else {
     Copy-Item -Path "$publishDir\*" -Destination $InstallPath -Recurse -Force
 }
 
-$exePath = Join-Path $InstallPath "ImageConverter.exe"
+$exePath = Join-Path $InstallPath "ConvertMe.exe"
 
 if (-not (Test-Path $exePath)) {
     Write-Host "Error: Application executable not found after copy!" -ForegroundColor Red
@@ -108,7 +108,7 @@ if (-not $NoShellIntegration) {
     Write-Host "[3/4] Registering shell context menu..." -ForegroundColor Cyan
     
     $imageExtensions = @(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".ico", ".svg")
-    $registryKeyName = "ImageConverter"
+    $registryKeyName = "ConvertMe"
     $menuName = "Convert Image"
     
     # Format options for submenu - ordered by popularity

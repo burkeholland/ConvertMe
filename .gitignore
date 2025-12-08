@@ -5,7 +5,7 @@ publish/
 release/
 
 # Large compiled executables - built by CI
-Installer/ImageConverter.exe
+Installer/ConvertMe.exe
 
 # IDE files
 .vs/

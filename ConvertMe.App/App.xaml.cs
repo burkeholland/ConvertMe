@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Windows;
-using ImageConverter.Models;
-using ImageConverter.Services;
+using ConvertMe.Models;
+using ConvertMe.Services;
 using Wpf.Ui.Appearance;
-using ImageFormat = ImageConverter.Models.ImageFormat;
+using ImageFormat = ConvertMe.Models.ImageFormat;
 
-namespace ImageConverter;
+namespace ConvertMe;
 
 /// <summary>
 /// Application entry point with command line handling.

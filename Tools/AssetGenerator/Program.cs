@@ -2,8 +2,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 
-var sourceIcon = args.Length > 0 ? args[0] : @"..\..\ImageConverter.App\Assets\app.png";
-var outputDir = args.Length > 1 ? args[1] : @"..\..\ImageConverter.Package\Images";
+var sourceIcon = args.Length > 0 ? args[0] : @"..\..\ConvertMe.App\Assets\app.png";
+var outputDir = args.Length > 1 ? args[1] : @"..\..\ConvertMe.Package\Images";
 
 // Store asset requirements
 var assets = new (string Name, int Width, int Height)[]

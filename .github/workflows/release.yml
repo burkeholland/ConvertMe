@@ -71,7 +71,7 @@ jobs:
         shell: pwsh
         run: |
           $version = "${{ steps.get_version.outputs.version }}"
-          $csprojPath = "ImageConverter.App/ImageConverter.App.csproj"
+          $csprojPath = "ConvertMe.App/ConvertMe.App.csproj"
           $content = Get-Content $csprojPath -Raw
           
           # Update or add version properties
@@ -97,13 +97,13 @@ jobs:
           Write-Host "Updated project version to $version"
 
       - name: Restore dependencies
-        run: dotnet restore ImageConverter.App/ImageConverter.App.csproj
+        run: dotnet restore ConvertMe.App/ConvertMe.App.csproj
 
       - name: Build
-        run: dotnet build ImageConverter.App/ImageConverter.App.csproj -c Release --no-restore
+        run: dotnet build ConvertMe.App/ConvertMe.App.csproj -c Release --no-restore
 
       - name: Publish
-        run: dotnet publish ImageConverter.App/ImageConverter.App.csproj -c Release -r win-x64 --self-contained true -o publish
+        run: dotnet publish ConvertMe.App/ConvertMe.App.csproj -c Release -r win-x64 --self-contained true -o publish
 
       - name: Create installer package
         shell: pwsh
@@ -112,7 +112,7 @@ jobs:
           New-Item -ItemType Directory -Path "release" -Force
           
           # Copy executable
-          Copy-Item "publish/ImageConverter.exe" -Destination "release/"
+          Copy-Item "publish/ConvertMe.exe" -Destination "release/"
           
           # Copy installer scripts
           Copy-Item "Installer/Install.bat" -Destination "release/"
@@ -122,9 +122,9 @@ jobs:
           Copy-Item "Installer/EnableClassicMenu.bat" -Destination "release/"
           
           # Create ZIP
-          Compress-Archive -Path "release/*" -DestinationPath "ImageConverter-${{ steps.get_version.outputs.tag }}.zip"
+          Compress-Archive -Path "release/*" -DestinationPath "ConvertMe-${{ steps.get_version.outputs.tag }}.zip"
           
-          Write-Host "Created ImageConverter-${{ steps.get_version.outputs.tag }}.zip"
+          Write-Host "Created ConvertMe-${{ steps.get_version.outputs.tag }}.zip"
 
       - name: Create Git tag
         shell: bash
@@ -151,12 +151,12 @@ jobs:
             ## ConvertMe ${{ steps.get_version.outputs.tag }}
             
             ### Installation
-            1. Download `ImageConverter-${{ steps.get_version.outputs.tag }}.zip`
+            1. Download `ConvertMe-${{ steps.get_version.outputs.tag }}.zip`
             2. Extract to a folder
             3. Right-click `Install.bat` → **Run as administrator**
             
             ### What's Included
-            - `ImageConverter.exe` - The main application
+            - `ConvertMe.exe` - The main application
             - `Install.bat` - Installer (run as admin)
             - `Uninstall.bat` - Uninstaller (run as admin)
             - `EnableClassicMenu.bat` - Enable Windows 11 classic context menu (optional)
@@ -167,7 +167,7 @@ jobs:
             - Quality and size controls
             - Modern Windows 11 UI with system theme support
           files: |
-            ImageConverter-${{ steps.get_version.outputs.tag }}.zip
+            ConvertMe-${{ steps.get_version.outputs.tag }}.zip
           draft: false
           prerelease: false
         env:

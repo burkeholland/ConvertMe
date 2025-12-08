@@ -11,7 +11,7 @@
 #>
 
 param(
-    [string]$InstallPath = "$env:ProgramFiles\ImageConverter"
+    [string]$InstallPath = "$env:ProgramFiles\ConvertMe"
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,7 +34,7 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
 Write-Host "[1/3] Removing shell context menu entries..." -ForegroundColor Cyan
 
 $imageExtensions = @(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".ico", ".svg")
-$registryKeyName = "ImageConverter"
+$registryKeyName = "ConvertMe"
 
 foreach ($ext in $imageExtensions) {
     $keyPath = "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\$ext\shell\$registryKeyName"
@@ -76,10 +76,10 @@ Write-Host "[3/3] Removing application files..." -ForegroundColor Cyan
 
 if (Test-Path $InstallPath) {
     # Check if the application is running
-    $process = Get-Process -Name "ImageConverter" -ErrorAction SilentlyContinue
+    $process = Get-Process -Name "ConvertMe" -ErrorAction SilentlyContinue
     if ($process) {
         Write-Host "  Stopping running instance..." -ForegroundColor Yellow
-        Stop-Process -Name "ImageConverter" -Force -ErrorAction SilentlyContinue
+        Stop-Process -Name "ConvertMe" -Force -ErrorAction SilentlyContinue
         Start-Sleep -Seconds 2
     }
     

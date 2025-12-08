@@ -44,7 +44,7 @@ That's it! You can now right-click any image file and select "Convert Image..."
 
 1. Build the application:
    ```powershell
-   cd ImageConverter.App
+   cd ConvertMe.App
    dotnet publish -c Release -r win-x64 --self-contained true
    ```
 
@@ -52,7 +52,7 @@ That's it! You can now right-click any image file and select "Convert Image..."
 
 3. Run the application with `--register` flag as administrator to enable shell integration:
    ```powershell
-   .\ImageConverter.exe --register
+   .\ConvertMe.exe --register
    ```
 
 ## Usage
@@ -130,7 +130,7 @@ By default on Windows 11, "Convert Image..." appears under "Show more options". 
 ### Manual Uninstall
 1. Run the application with `--unregister` flag as administrator:
    ```powershell
-   .\ImageConverter.exe --unregister
+   .\ConvertMe.exe --unregister
    ```
 2. Delete the application folder
 
@@ -151,7 +151,7 @@ By default on Windows 11, "Convert Image..." appears under "Show more options". 
 
 ```powershell
 # Clone or download the source code
-cd ImageConverter
+cd ConvertMe
 
 # Restore dependencies
 dotnet restore
@@ -177,8 +177,8 @@ dotnet publish -c Release -r win-x64 --self-contained true
 
 ### Project Structure
 ```
-ImageConverter/
-├── ImageConverter.App/
+ConvertMe/
+├── ConvertMe.App/
 │   ├── Assets/              # Icons and resources
 │   ├── Converters/          # XAML value converters
 │   ├── Models/              # Data models

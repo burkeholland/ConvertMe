@@ -1,4 +1,4 @@
-namespace ImageConverter.Models;
+namespace ConvertMe.Models;
 
 /// <summary>
 /// Represents supported image formats for conversion.

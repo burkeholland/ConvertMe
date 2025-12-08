@@ -1,4 +1,4 @@
-namespace ImageConverter.Models;
+namespace ConvertMe.Models;
 
 /// <summary>
 /// Result of an image conversion operation.

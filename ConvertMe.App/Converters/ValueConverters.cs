@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace ImageConverter.Converters;
+namespace ConvertMe.Converters;
 
 /// <summary>
 /// Converts boolean to visibility.

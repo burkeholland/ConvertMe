@@ -2,7 +2,7 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Security.Principal;
 
-namespace ImageConverter.Services;
+namespace ConvertMe.Services;
 
 /// <summary>
 /// Service for managing Windows shell context menu registration.
@@ -12,7 +12,7 @@ public class ShellIntegrationService
 {
     // Constants for registry configuration
     private const string MenuName = "Convert Image";
-    private const string RegistryKeyName = "ImageConverter";
+    private const string RegistryKeyName = "ConvertMe";
     private const int SeparatorFlag = 0x20;  // CommandFlags value for separator before menu item
     
     private static readonly string[] ImageExtensions =

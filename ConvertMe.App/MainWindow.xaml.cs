@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Windows;
-using ImageConverter.Services;
-using ImageConverter.ViewModels;
+using ConvertMe.Services;
+using ConvertMe.ViewModels;
 using Wpf.Ui.Controls;
 
-namespace ImageConverter;
+namespace ConvertMe;
 
 /// <summary>
 /// Main application window with drag-drop support.

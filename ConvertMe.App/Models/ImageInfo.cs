@@ -1,4 +1,4 @@
-namespace ImageConverter.Models;
+namespace ConvertMe.Models;
 
 /// <summary>
 /// Represents information about a source image file.

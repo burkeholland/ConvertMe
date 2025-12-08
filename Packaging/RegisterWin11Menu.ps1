@@ -19,14 +19,14 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Configuration
-$PackageName = "ImageConverter"
-$Publisher = "CN=ImageConverter"
+$PackageName = "ConvertMe"
+$Publisher = "CN=ConvertMe"
 $Version = "1.0.0.0"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$AppDir = Join-Path $ScriptDir "..\ImageConverter.App\bin\Release\net8.0-windows\win-x64\publish"
+$AppDir = Join-Path $ScriptDir "..\ConvertMe.App\bin\Release\net8.0-windows\win-x64\publish"
 $ManifestPath = Join-Path $ScriptDir "AppxManifest.xml"
-$ExePath = Join-Path $AppDir "ImageConverter.exe"
+$ExePath = Join-Path $AppDir "ConvertMe.exe"
 
 # Check Windows version
 $WinVer = [System.Environment]::OSVersion.Version
@@ -97,7 +97,7 @@ $manifest = @"
   </Capabilities>
 
   <Applications>
-    <Application Id="App" Executable="ImageConverter.exe" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="App" Executable="ConvertMe.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements DisplayName="ConvertMe" 
                           Description="Convert images between formats"
                           BackgroundColor="transparent" 
@@ -110,31 +110,31 @@ $manifest = @"
         <desktop4:Extension Category="windows.fileExplorerContextMenus">
           <desktop4:FileExplorerContextMenus>
             <desktop5:ItemType Type=".jpg">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".jpeg">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".png">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".gif">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".bmp">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".webp">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".tiff">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".tif">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
             <desktop5:ItemType Type=".svg">
-              <desktop5:Verb Id="ImageConverterConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
+              <desktop5:Verb Id="ConvertMeConvert" Clsid="B1ACA79B-47E6-4E50-BE81-535E6267C8B7" />
             </desktop5:ItemType>
           </desktop4:FileExplorerContextMenus>
         </desktop4:Extension>
@@ -154,7 +154,7 @@ if (-not (Test-Path $AssetsDir)) {
     New-Item -ItemType Directory -Path $AssetsDir -Force | Out-Null
 }
 
-$SourceAssets = Join-Path $ScriptDir "..\ImageConverter.App\Assets\app.png"
+$SourceAssets = Join-Path $ScriptDir "..\ConvertMe.App\Assets\app.png"
 if (Test-Path $SourceAssets) {
     Copy-Item $SourceAssets -Destination $AssetsDir -Force
 }

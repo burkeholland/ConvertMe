@@ -22,7 +22,7 @@ This document outlines the steps to publish ConvertMe to the Microsoft Store.
 
 ### 2. Update Package Identity
 
-Edit `ImageConverter.Package/Package.appxmanifest`:
+Edit `ConvertMe.Package/Package.appxmanifest`:
 
 ```xml
 <Identity Name="YOUR_RESERVED_NAME"
@@ -32,21 +32,21 @@ Edit `ImageConverter.Package/Package.appxmanifest`:
 ```
 
 Replace:
-- `YOUR_RESERVED_NAME` with the name from Partner Center (e.g., `12345BurkeHolland.ImageConverter`)
+- `YOUR_RESERVED_NAME` with the name from Partner Center (e.g., `12345BurkeHolland.ConvertMe`)
 - `YOUR_PUBLISHER_ID` with your Publisher ID from Partner Center
 
 ### 3. Build the MSIX Package
 
 #### Option A: Using Visual Studio
-1. Open `ImageConverter.sln` in Visual Studio 2022
-2. Right-click `ImageConverter.Package` → Publish → Create App Packages
+1. Open `ConvertMe.sln` in Visual Studio 2022
+2. Right-click `ConvertMe.Package` → Publish → Create App Packages
 3. Select "Microsoft Store as package type" and sign in
 4. Follow the wizard to create the package
 
 #### Option B: Using Command Line
 ```powershell
 # Build the package
-msbuild ImageConverter.Package\ImageConverter.Package.wapproj /p:Configuration=Release /p:Platform=x64 /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never
+msbuild ConvertMe.Package\ConvertMe.Package.wapproj /p:Configuration=Release /p:Platform=x64 /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Never
 ```
 
 ### 4. Submit to Store
@@ -112,4 +112,4 @@ cd Tools\AssetGenerator
 dotnet run
 ```
 
-This creates all required icon sizes in `ImageConverter.Package\Images\`.
+This creates all required icon sizes in `ConvertMe.Package\Images\`.
