@@ -97,10 +97,7 @@ jobs:
           Write-Host "Updated project version to $version"
 
       - name: Restore dependencies
-        run: dotnet restore ConvertMe.App/ConvertMe.App.csproj
-
-      - name: Build
-        run: dotnet build ConvertMe.App/ConvertMe.App.csproj -c Release --no-restore
+        run: dotnet restore ConvertMe.App/ConvertMe.App.csproj -r win-x64
 
       - name: Publish
         run: dotnet publish ConvertMe.App/ConvertMe.App.csproj -c Release -r win-x64 --self-contained true -o publish
