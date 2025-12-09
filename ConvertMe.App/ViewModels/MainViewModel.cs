@@ -5,6 +5,7 @@ using ConvertMe.Services;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Media;
 using System.Windows;
 using ImageFormat = ConvertMe.Models.ImageFormat;
 using ResizeMode = ConvertMe.Models.ResizeMode;
@@ -219,6 +220,8 @@ public partial class MainViewModel : ObservableObject
 
             if (result.Success)
             {
+                // Play Windows notification sound on successful conversion
+                SystemSounds.Asterisk.Play();
                 StatusMessage = $"✓ Converted successfully! Size: {result.FormattedNewSize} ({result.CompressionRatio:F1}% of original)";
                 HasError = false;
             }
