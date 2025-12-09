@@ -20,8 +20,8 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // Apply system theme on background thread to avoid blocking startup
-        Task.Run(() => ApplicationThemeManager.ApplySystemTheme());
+        // Apply system theme (must be on UI thread as it accesses MainWindow)
+        ApplicationThemeManager.ApplySystemTheme();
 
         // Handle command line arguments
         if (e.Args.Length > 0)
