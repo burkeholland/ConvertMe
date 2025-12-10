@@ -8,10 +8,11 @@ using SkiaSharp;
 
 var outputDir = args.Length > 0 ? args[0] : @"..\..\ConvertMe.Package\Images";
 var appAssetsDir = @"..\..\ConvertMe.App\Assets";
+var storeAssetsDir = @"..\..\ConvertMe.Package\StoreAssets";
 var svgPath = @"..\..\new-logo.svg";
 
-// Store asset requirements
-var assets = new (string Name, int Width, int Height)[]
+// Package asset requirements (for app manifest)
+var packageAssets = new (string Name, int Width, int Height)[]
 {
     // Square logos
     ("Square44x44Logo.png", 44, 44),
@@ -53,8 +54,41 @@ var assets = new (string Name, int Width, int Height)[]
     ("SplashScreen.scale-200.png", 1240, 600),
 };
 
+// Microsoft Store listing assets (uploaded to Partner Center)
+var storeAssets = new (string Name, int Width, int Height, string Description)[]
+{
+    // App icon for Store listing (required)
+    ("AppIcon-300x300.png", 300, 300, "App icon (required)"),
+    
+    // Store logos - various sizes for different display contexts
+    ("StoreLogo-720x1080.png", 720, 1080, "Store logo 2:3 poster"),
+    ("StoreLogo-1080x1080.png", 1080, 1080, "Store logo 1:1 square"),
+    
+    // Screenshots placeholders - These need actual app screenshots
+    // ("Screenshot-1366x768.png", 1366, 768, "Screenshot 16:9"),
+    
+    // Promotional images - Hero images for Store features
+    ("Hero-1920x1080.png", 1920, 1080, "Hero image 16:9 (Xbox/Desktop)"),
+    ("Hero-2400x1200.png", 2400, 1200, "Superhero art 2:1"),
+    
+    // Promotional tiles for Store
+    ("Tile-414x180.png", 414, 180, "Small promo tile"),
+    ("Tile-414x468.png", 414, 468, "Poster promo tile"),
+    ("Tile-558x558.png", 558, 558, "Square promo tile"),
+    ("Tile-558x756.png", 558, 756, "Tall promo tile"),
+    ("Tile-846x468.png", 846, 468, "Wide promo tile"),
+    
+    // Box art
+    ("BoxArt-1080x1080.png", 1080, 1080, "Box art square"),
+    ("BoxArt-2160x1080.png", 2160, 1080, "Box art wide 2:1"),
+    
+    // Badge logo (for Store results)
+    ("Badge-1920x1080.png", 1920, 1080, "Featured promotion badge"),
+};
+
 Directory.CreateDirectory(outputDir);
 Directory.CreateDirectory(appAssetsDir);
+Directory.CreateDirectory(storeAssetsDir);
 
 // Load and process the SVG - replace currentColor with blue
 var svgContent = File.ReadAllText(svgPath);
@@ -74,7 +108,8 @@ Console.WriteLine("Created: app.png (512x512) - master icon");
 GenerateIcoFile(svgContent, System.IO.Path.Combine(appAssetsDir, "app.ico"));
 Console.WriteLine("Created: app.ico - Windows icon");
 
-foreach (var (name, width, height) in assets)
+Console.WriteLine("\n--- Package Assets ---");
+foreach (var (name, width, height) in packageAssets)
 {
     var outputPath = System.IO.Path.Combine(outputDir, name);
     
@@ -102,7 +137,79 @@ foreach (var (name, width, height) in assets)
     Console.WriteLine($"Created: {name} ({width}x{height})");
 }
 
-Console.WriteLine($"\nGenerated {assets.Length + 2} assets from SVG");
+Console.WriteLine("\n--- Store Listing Assets ---");
+foreach (var (name, width, height, description) in storeAssets)
+{
+    var outputPath = System.IO.Path.Combine(storeAssetsDir, name);
+    GenerateStoreAsset(svgContent, outputPath, width, height, name);
+    Console.WriteLine($"Created: {name} ({width}x{height}) - {description}");
+}
+
+Console.WriteLine($"\nGenerated {packageAssets.Length + 2} package assets");
+Console.WriteLine($"Generated {storeAssets.Length} store listing assets in StoreAssets/");
+
+// Generate a Store asset with centered logo and branded background
+static void GenerateStoreAsset(string svgContent, string outputPath, int width, int height, string name)
+{
+    // Dark gradient background with subtle brand color
+    var bgColor = new Rgba32(20, 20, 30, 255); // Dark blue-ish gray
+    
+    using var canvas = new Image<Rgba32>(width, height, bgColor);
+    
+    // Add a subtle gradient overlay
+    canvas.Mutate(ctx =>
+    {
+        // Create gradient effect manually with a semi-transparent overlay
+        var gradientColor = new Rgba32(37, 99, 235, 40); // Blue with low alpha
+        var gradientRect = new RectangularPolygon(0, 0, width, height);
+        ctx.Fill(gradientColor, gradientRect);
+    });
+    
+    // Calculate icon size based on asset dimensions
+    // For square assets, icon takes up ~60% of the space
+    // For wide/tall assets, icon is sized relative to the smaller dimension
+    int iconSize;
+    if (width == height)
+    {
+        iconSize = (int)(width * 0.5);
+    }
+    else if (width > height)
+    {
+        // Wide format - use height as reference
+        iconSize = (int)(height * 0.5);
+    }
+    else
+    {
+        // Tall format - use width as reference
+        iconSize = (int)(width * 0.5);
+    }
+    
+    // Ensure minimum icon size for very small assets
+    iconSize = Math.Max(iconSize, 80);
+    
+    using var icon = RenderSvgToImage(svgContent, iconSize, iconSize);
+    
+    // Center the icon
+    var x = (width - iconSize) / 2;
+    var y = (height - iconSize) / 2;
+    
+    // For tall formats, position icon in upper portion
+    if (height > width * 1.3)
+    {
+        y = (int)(height * 0.3) - iconSize / 2;
+    }
+    
+    canvas.Mutate(ctx => ctx.DrawImage(icon, new Point(x, y), 1f));
+    
+    // Add app name text for larger promotional assets
+    if (width >= 500 && height >= 400)
+    {
+        // For now we just have the icon - text would require font rendering
+        // which is more complex. The store allows adding text separately.
+    }
+    
+    canvas.Save(outputPath);
+}
 
 // Render SVG to ImageSharp image
 static Image<Rgba32> RenderSvgToImage(string svgContent, int width, int height)
